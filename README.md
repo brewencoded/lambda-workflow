@@ -1,0 +1,18 @@
+# lambda-workflow
+
+A simple app to showcase a local development and test with remote deplay workflow built around SAM CLI.
+
+### Workflow
+ - venv to keep python dependencies separated
+ - SAM CLI with Docker to develop, test, and deploy
+ - React and Webpack for the front-end
+
+### Getting started
+ - install docker through your package manager, or alternate options on the docker website
+ - clone the repo `git clone git@github.com:brewencoded/lambda-workflow.git`
+ - create a virtual environment `virtualenv -p /path/to/your/python2 venv`
+   - find python path using `which python2`
+ - enter python environment `source venv/bin/activate`
+ - install dependencies `pip install -r requirements.txt`
+ - install lambda dependencies `cd sam-app && npm install`
+ - install client app dependencies `cd client && npm install`
