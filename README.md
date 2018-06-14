@@ -17,3 +17,7 @@ A simple app to showcase a local development and test with remote deplay workflo
  - install lambda dependencies `cd sam-app/hello_world && npm install`
  - install client app dependencies `cd sam-app/client && npm install`
  - run `aws configure` and fill in the information
+
+### Running the app
+ - to run the app locally: `sam local start-api`
+ - to deploy to AWS: `./deploy.sh`

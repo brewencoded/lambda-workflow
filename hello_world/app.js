@@ -1,17 +1,21 @@
-
-const axios = require('axios')
-const url = 'http://checkip.amazonaws.com/';
-let response;
-
+const axios = require('axios');
+const AWS = require('aws-sdk');
+const documentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.lambda_handler = async (event, context, callback) => {
+    let response;
     try {
-        const ret = await axios(url);
+        const ret = await documentClient.get({
+            Key: {
+                id: "1"
+            },
+            TableName: "Books"
+        }).promise();
         response = {
             'statusCode': 200,
             'body': JSON.stringify({
                 message: 'hello world',
-                location: ret.data.trim()
+                location: ret
             })
         }
     }
