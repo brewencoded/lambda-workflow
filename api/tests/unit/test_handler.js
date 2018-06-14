@@ -3,9 +3,11 @@
 const app = require('../../app.js');
 const chai = require('chai');
 const expect = chai.expect;
-var event, context;
+let event, context;
 
-
+// TODO: use child_process to start sam local and invoke the lambdas
+// OR
+// TODO: use a dynamodb docker container and env vars to change db endpoint
 describe('Tests index', function () {
     it('verifies successful response', async () => {
         const result = await app.lambda_handler(event, context, (err, result) => {
@@ -16,8 +18,7 @@ describe('Tests index', function () {
             let response = JSON.parse(result.body);
 
             expect(response).to.be.an('object');
-            expect(response.message).to.be.equal("hello world");
-            expect(response.location).to.be.an("string");
+            expect(response.success).to.be.true;
         });
     });
 });
