@@ -14,5 +14,6 @@ A simple app to showcase a local development and test with remote deplay workflo
    - find python path using `which python2`
  - enter python environment `source venv/bin/activate`
  - install dependencies `pip install -r requirements.txt`
- - install lambda dependencies `cd sam-app && npm install`
- - install client app dependencies `cd client && npm install`
+ - install lambda dependencies `cd sam-app/hello_world && npm install`
+ - install client app dependencies `cd sam-app/client && npm install`
+ - run `aws configure` and fill in the information
