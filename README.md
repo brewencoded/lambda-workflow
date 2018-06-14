@@ -20,4 +20,6 @@ A simple app to showcase a local development and test with remote deplay workflo
 
 ### Running the app
  - to run the app locally: `sam local start-api`
+  - go to `http://localhost:3000/hello` to access the lambda
  - to deploy to AWS: `./deploy.sh`
+  - this creates a Lambda and DynamoDB on your AWS account
