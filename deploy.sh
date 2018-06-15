@@ -1,6 +1,9 @@
 #!/bin/bash
 
-PROJECT=sam-application
+# dev ./deploy.sh
+# prod ./deploy.sh prod
+STAGE=${1:-dev}
+PROJECT=sam-application-$STAGE
 
 BUCKET=$PROJECT-20180613-brewencoded
 
@@ -21,4 +24,5 @@ sam package                      \
 sam deploy                                      \
     --template-file build/output.yaml           \
     --stack-name $PROJECT                       \
-    --capabilities CAPABILITY_IAM
+    --capabilities CAPABILITY_IAM               \
+    --parameter-overrides Environment=$STAGE

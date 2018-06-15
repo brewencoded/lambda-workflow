@@ -4,12 +4,13 @@ const documentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.lambda_handler = async (event, context, callback) => {
     let response;
+    console.dir(process.env);
     try {
         const ret = await documentClient.get({
             Key: {
                 id: "1"
             },
-            TableName: "Books"
+            TableName: process.env.BookTable
         }).promise();
         response = {
             'statusCode': 200,
