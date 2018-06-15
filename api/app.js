@@ -14,6 +14,9 @@ exports.lambda_handler = async (event, context, callback) => {
         }).promise();
         response = {
             'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*' // shouldn't use this in a real app
+            },
             'body': JSON.stringify({
                 success: true,
                 data: ret.Item
