@@ -35,6 +35,17 @@ Resources:
                     /api:
                         get:
                             x-amazon-apigateway-integration:
+                                produces:
+                                    - application/json
+                                httpMethod: POST
+                                type: aws_proxy
+                                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BookAPIFunction.Arn}/invocations
+                            responses: {}
+                    /api/{id}:
+                        get:
+                            x-amazon-apigateway-integration:
+                                produces:
+                                    - application/json
                                 httpMethod: POST
                                 type: aws_proxy
                                 uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BookAPIFunction.Arn}/invocations
@@ -47,6 +58,7 @@ Resources:
                                     required: false
                                     type: string
 
+
     BookAPIFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -58,10 +70,17 @@ Resources:
                 Variables:
                     BookTable: !Ref DynamoDBDatabase
             Events:
-                BookAPIRequest:
+                GetAllBooks:
                     Type: Api
                     Properties:
                         Path: /api
+                        Method: get
+                        RestApiId:
+                            Ref: BookAPI
+                GetBook:
+                    Type: Api
+                    Properties:
+                        Path: /api/{id}
                         Method: get
                         RestApiId:
                             Ref: BookAPI
