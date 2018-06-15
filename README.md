@@ -26,3 +26,7 @@ A simple app to showcase a local development and test with remote deplay workflo
    - this creates a Lambda and DynamoDB on your AWS account
    - use `./deploy.sh` to deploy dev
    - use `./deploy.sh prod` to deploy prod
+   - in `client/package.json` change the s3 bucket id to your s3 bucket
+   - in `client/src/App.js` change the endpoint to the lambda endpoint
+   - finally `cd client` then `npm run deploy`
+   - navigate to your s3 endpoint you and will be able to see your website
