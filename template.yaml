@@ -6,6 +6,13 @@ Description: AWS SAM Example Application
 Globals:
     Function:
         Timeout: 3
+    Api:
+        # enable CORS; to make more specific, change the origin wildcard
+        # to a particular domain name, e.g. "'www.example.com'"
+        Cors:
+            AllowMethods: "'*'"
+            AllowHeaders: "'*'"
+            AllowOrigin: "'*'"
 
 Parameters:
     Environment:
@@ -51,14 +58,13 @@ Resources:
                 Variables:
                     BookTable: !Ref DynamoDBDatabase
             Events:
-                GetAllBooks:
+                BookAPIRequest:
                     Type: Api
                     Properties:
-                        Path: /api/{id}
+                        Path: /api
                         Method: get
                         RestApiId:
                             Ref: BookAPI
-                
             Policies:
                 - AWSLambdaBasicExecutionRole
                 - AmazonDynamoDBFullAccess # Definitely don't want this for a production app
@@ -77,7 +83,7 @@ Resources:
             ProvisionedThroughput:
                 ReadCapacityUnits: 1
                 WriteCapacityUnits: 1
-    
+
     S3Bucket:
         Type: AWS::S3::Bucket
         Properties:

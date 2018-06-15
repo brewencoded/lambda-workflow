@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
-const endpoint = 'https://5doo2mhrmc.execute-api.us-east-1.amazonaws.com/dev/api';
+const endpoint = 'https://tcqwrw7oq0.execute-api.us-east-1.amazonaws.com/dev/api';
 
 class App extends Component {
     componentDidMount() {
