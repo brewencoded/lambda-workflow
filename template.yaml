@@ -32,6 +32,13 @@ Resources:
                                 type: aws_proxy
                                 uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BookAPIFunction.Arn}/invocations
                             responses: {}
+                            parameters:
+                                -
+                                    name: bookId
+                                    in: path
+                                    description: ID of the book
+                                    required: false
+                                    type: string
 
     BookAPIFunction:
         Type: AWS::Serverless::Function
@@ -44,13 +51,14 @@ Resources:
                 Variables:
                     BookTable: !Ref DynamoDBDatabase
             Events:
-                BookAPIRequest:
+                GetAllBooks:
                     Type: Api
                     Properties:
-                        Path: /api
+                        Path: /api/{id}
                         Method: get
                         RestApiId:
                             Ref: BookAPI
+                
             Policies:
                 - AWSLambdaBasicExecutionRole
                 - AmazonDynamoDBFullAccess # Definitely don't want this for a production app

@@ -3,15 +3,15 @@ const AWS = require('aws-sdk');
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
 exports.lambda_handler = async (event, context, callback) => {
+    console.dir(event['pathParameters'])
     let response;
-    console.dir(process.env);
     try {
-        const ret = await documentClient.get({
-            Key: {
-                id: "1"
-            },
-            TableName: process.env.BookTable
-        }).promise();
+        // const ret = await documentClient.get({
+        //     Key: {
+        //         id: "1"
+        //     },
+        //     TableName: process.env.BookTable
+        // }).promise();
         response = {
             'statusCode': 200,
             'headers': {
@@ -19,7 +19,7 @@ exports.lambda_handler = async (event, context, callback) => {
             },
             'body': JSON.stringify({
                 success: true,
-                data: ret.Item
+                data: event //ret.Item
             })
         }
     }
