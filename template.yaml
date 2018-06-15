@@ -7,23 +7,50 @@ Globals:
     Function:
         Timeout: 3
 
+Parameters:
+    Environment:
+        Type: String
+
 Resources:
 
-    BookAPIFunction:
-        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    BookAPI:
+        Type: AWS::Serverless::Api
         Properties:
-            CodeUri: api/
+            StageName: !Sub ${Environment}
+            DefinitionBody:
+                swagger: 2.0
+                info:
+                    title:
+                        Ref: AWS::StackName
+                x-amazon-apigateway-binary-media-types:
+                    - '*/*'
+                paths:
+                    /api:
+                        get:
+                            x-amazon-apigateway-integration:
+                                httpMethod: POST
+                                type: aws_proxy
+                                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BookAPIFunction.Arn}/invocations
+                            responses: {}
+
+    BookAPIFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: !Sub BookAPIFunction-${Environment}
+            CodeUri: api
             Handler: app.lambda_handler
             Runtime: nodejs8.10
-            Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+            Environment:
                 Variables:
-                    PARAM1: VALUE
+                    BookTable: !Ref DynamoDBDatabase
             Events:
-                BookAPI:
-                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+                BookAPIRequest:
+                    Type: Api
                     Properties:
                         Path: /api
                         Method: get
+                        RestApiId:
+                            Ref: BookAPI
             Policies:
                 - AWSLambdaBasicExecutionRole
                 - AmazonDynamoDBFullAccess # Definitely don't want this for a production app
@@ -42,4 +69,3 @@ Resources:
             ProvisionedThroughput:
                 ReadCapacityUnits: 1
                 WriteCapacityUnits: 1
-            TableName: "Books"
