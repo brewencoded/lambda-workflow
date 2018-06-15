@@ -6,6 +6,13 @@ Description: AWS SAM Example Application
 Globals:
     Function:
         Timeout: 3
+    Api:
+        # enable CORS; to make more specific, change the origin wildcard
+        # to a particular domain name, e.g. "'www.example.com'"
+        Cors:
+            AllowMethods: "'*'"
+            AllowHeaders: "'*'"
+            AllowOrigin: "'*'"
 
 Parameters:
     Environment:
@@ -28,10 +35,29 @@ Resources:
                     /api:
                         get:
                             x-amazon-apigateway-integration:
+                                produces:
+                                    - application/json
                                 httpMethod: POST
                                 type: aws_proxy
                                 uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BookAPIFunction.Arn}/invocations
                             responses: {}
+                    /api/{id}:
+                        get:
+                            x-amazon-apigateway-integration:
+                                produces:
+                                    - application/json
+                                httpMethod: POST
+                                type: aws_proxy
+                                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${BookAPIFunction.Arn}/invocations
+                            responses: {}
+                            parameters:
+                                -
+                                    name: bookId
+                                    in: path
+                                    description: ID of the book
+                                    required: false
+                                    type: string
+
 
     BookAPIFunction:
         Type: AWS::Serverless::Function
@@ -44,10 +70,17 @@ Resources:
                 Variables:
                     BookTable: !Ref DynamoDBDatabase
             Events:
-                BookAPIRequest:
+                GetAllBooks:
                     Type: Api
                     Properties:
                         Path: /api
+                        Method: get
+                        RestApiId:
+                            Ref: BookAPI
+                GetBook:
+                    Type: Api
+                    Properties:
+                        Path: /api/{id}
                         Method: get
                         RestApiId:
                             Ref: BookAPI
@@ -69,7 +102,7 @@ Resources:
             ProvisionedThroughput:
                 ReadCapacityUnits: 1
                 WriteCapacityUnits: 1
-    
+
     S3Bucket:
         Type: AWS::S3::Bucket
         Properties:
