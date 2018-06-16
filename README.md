@@ -30,3 +30,8 @@ A simple app to showcase a local development and test with remote deplay workflo
    - in `client/src/App.js` change the endpoint to the lambda endpoint
    - finally `cd client` then `npm run deploy`
    - navigate to your s3 endpoint you and will be able to see your website
+
+### See It working
+
+You can see the app running live at:
+http://sam-application-dev-s3bucket-rnhf3niiohg1.s3-website-us-east-1.amazonaws.com/
