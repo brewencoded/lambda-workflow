@@ -3,47 +3,26 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
-import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import BookList from './BookList';
 import BookDetails from './BookDetails';
+import Dialog from './Dialog';
 
 const endpoint = 'https://tcqwrw7oq0.execute-api.us-east-1.amazonaws.com/dev/api';
-
-let id = 0;
-function createData(name, available, author, description) {
-  id += 1;
-  return { id, name, available, author, description };
-}
-
-const data = [
-  createData('Frozen yoghurt', 2, "auth 1", "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",),
-  createData('Ice cream sandwich', 4, "auth 2", 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'),
-  createData('Eclair', 6, "auth 3", 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'),
-  createData('Cupcake', 305, "auth 4", 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'),
-  createData('Gingerbread', 10, "auth 5", 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica'),
-];
 
 const BasicExample = () => (
   <Router>
       <div>
-        <Route exact path="/" render={(props) => <Home data={data} {...props}/>} />
-        <Route exact path="/details/:id" render={(props) => <BookDetails data={data} {...props}/>}/>
+        <Route path="/" render={(props) => <Home {...props}/>} />
       </div>
   </Router>
 );
-
-const styles = {
-    root: {
-      flexGrow: 1,
-    },
-  };
   
 function Header(props) {
     return (
-        <div >
+        <div>
         <AppBar position="static" color="default">
             <Toolbar>
             <Typography variant="title" color="inherit">
@@ -55,12 +34,48 @@ function Header(props) {
     );
 }
 
-const Home = (props) => (
-  <div>
-    <Header />
-    <BookList {...props}/>
-  </div>
-);
+class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            showDialog: false
+        };
+        this.hideDialog = this.hideDialog.bind(this);
+    }
+    componentWillMount() {
+        axios.get(endpoint)
+        .then(({ data }) => {
+            this.setState({
+                data: data.data.Items,
+                showDialog: !!data.data.Items.find(book => book.num_available < 5)
+            });
+        });
+    }
+    showDialog() {
+        this.setState({
+            ...this.state,
+            showDialog: true
+        });
+    }
+    hideDialog() {
+        this.setState({
+            ...this.state,
+            showDialog: false
+        });
+    }
+    render() {
+        return (
+            <div>
+                <Header />
+                <Dialog open={this.state.showDialog} closeDialog={this.hideDialog}/>
+                <Route exact path="/" {...this.props} render={(props) => <BookList data={this.state.data} {...props}/>}/>
+                <Route path="/details/:id" render={(props) => <BookDetails data={this.state.data} {...props}/>}/>
+            </div>
+        )
+    }
+}
+
 
 export default BasicExample;
 

@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 const pageStyles = {
+    paddingTop: '1em',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

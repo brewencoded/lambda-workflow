@@ -44,7 +44,7 @@ function SimpleTable(props) {
                     {n.id}
                 </TableCell>
                 <TableCell >{n.name}</TableCell>
-                <TableCell numeric>{n.available}</TableCell>
+                <TableCell numeric>{n.num_available}</TableCell>
               </TableRow>
             );
           })}
